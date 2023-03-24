@@ -91,11 +91,11 @@ A ``config.json`` file is automatically created in WACVR's root directory on sta
 #### Adalight
 It connects to WS2812 LED strip using an arduino board via adalight  protocol (http://electronoobs.com/eng_arduino_tut29_code2.php)
 Config constist of:
- - AdalightPort - port of an arduino(you can find it using arduino ide)
- - AdalightOffset - offset of the first diode in a strip
- - AdalightLEDCount - how many diodes are in strip
- - AdalightMirror - mirrors strip
- - AdalightEnable - enables adalight support
+ - ``AdalightPort`` - port of an arduino(you can find it using arduino ide)
+ - ``AdalightOffset`` - offset of the first diode in a strip
+ - ``AdalightLEDCount`` - how many diodes are in strip
+ - ``AdalightMirror`` - mirrors strip
+ - ``AdalightEnable`` - enables adalight support
 
 ## Building guide
 - Current Unity version: 2021.3.12f1
