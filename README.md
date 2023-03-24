@@ -88,6 +88,15 @@ A ``config.json`` file is automatically created in WACVR's root directory on sta
 - Some options in ``config.json`` are only the index of the dropdown in the panel.
 - You can use the pointer to point the 3rd-person camera and move it to the position you want it to be.
 
+#### Adalight
+It connects to WS2812 LED strip using an arduino board via adalight  protocol (http://electronoobs.com/eng_arduino_tut29_code2.php)
+Config constist of:
+ - AdalightPort - port of an arduino(you can find it using arduino ide)
+ - AdalightOffset - offset of the first diode in a strip
+ - AdalightLEDCount - how many diodes are in strip
+ - AdalightMirror - mirrors strip
+ - AdalightEnable - enables adalight support
+
 ## Building guide
 - Current Unity version: 2021.3.12f1
 - for mercuryio, just replace files in mercuryio folder with files in this repo.
