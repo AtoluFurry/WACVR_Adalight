@@ -64,8 +64,10 @@ public class LightManager : MonoBehaviour
 
     private void Start() 
     {
-        serialPort = new SerialPort(ConfigManager.config.AdalightPort, 115200, Parity.None, 8, StopBits.One);
-        serialPort.Open();
+        if(ConfigManager.config.AdalightEnable){
+            serialPort = new SerialPort(ConfigManager.config.AdalightPort, 115200, Parity.None, 8, StopBits.One);
+            serialPort.Open();
+        }
         for (int i = 0; i < Lights.Count; i++)
             Materials.Add(Lights[i].GetComponent<Renderer>().material);
         
@@ -112,7 +114,9 @@ public class LightManager : MonoBehaviour
             if (isIPCIdle)
                 return;
             UpdateLED();
-            Adalight();
+            if(ConfigManager.config.AdalightEnable){
+                Adalight();
+            }
         }
         else
         {

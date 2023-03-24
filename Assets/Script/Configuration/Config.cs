@@ -43,4 +43,5 @@ public class Config
     public int AdalightOffset = 16;
     public int AdalightLEDCount = 24;
     public bool AdalightMirror = true;
+    public bool AdalightEnable = true;
 }
