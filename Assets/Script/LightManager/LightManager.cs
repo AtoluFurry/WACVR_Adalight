@@ -8,7 +8,6 @@ using System.IO.Ports;
 public class LightManager : MonoBehaviour
 {
     public SerialPort serialPort;
-    private const int LED_COUNT = 24; 
     public List<GameObject> Lights = new List<GameObject>();
     List<Material> Materials = new List<Material>();
     [SerializeField]
@@ -24,38 +23,48 @@ public class LightManager : MonoBehaviour
 
 
     public void Adalight() {
-        int offset = 16;
+        int offset = ConfigManager.config.AdalightOffset;
+        int leds = ConfigManager.config.AdalightLEDCount;
+        bool mirror = ConfigManager.config.AdalightMirror;
         float Remap(float value, float from1, float to1, float from2, float to2) {
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
-        // send the LED color data in the Adalight protocol format
-        byte[] data = new byte[3 * LED_COUNT + 6];
-        // header consists of a magic number followed by high byte and low byte of LED count
-        data[0] = 0x41;
-        data[1] = 0x64;
-        data[2] = 0x61;
-        data[3] = (byte)(LED_COUNT >> 8);
-        data[4] = (byte)(LED_COUNT & 0xFF);
+        byte[] data = new byte[3 * leds + 6];
+        // header consists of a magic word followed by high byte and low byte of LED count
+        data[0] = 0x41; // A
+        data[1] = 0x64; // d
+        data[2] = 0x61; // a
+        data[3] = (byte)(leds >> 8); // hi
+        data[4] = (byte)(leds & 0xFF); // lo
         data[5] = (byte)(data[3] ^ data[4] ^ 0x55);
-        for(int i = 0; i < LED_COUNT; i++){
-            var ii = (int)Remap(i, 0, LED_COUNT, 0, 60);
+        for(int i = 0; i < leds; i++){
+            var ii = (int)Remap(i, 0, leds, 0, 60);
             var iii = 0;
+            var pos = 0;
+
+            if(mirror){
+                pos = ((leds - i) + offset) % leds;
+            }else{
+                pos = (i + offset) % leds;
+            }
+
             if(ii > 30){
                 iii = (60 - ii) + 120;
             }else{
                 iii = ii;
             }
+
             Material Color = Materials[iii];
-            data[(((LED_COUNT - i) + offset) % LED_COUNT) * 3 + 6] = (byte)(Color.GetColor("_EmissionColor").r * 255);
-            data[(((LED_COUNT - i) + offset) % LED_COUNT) * 3 + 7] = (byte)(Color.GetColor("_EmissionColor").g * 255);
-            data[(((LED_COUNT - i) + offset) % LED_COUNT) * 3 + 8] = (byte)(Color.GetColor("_EmissionColor").b * 255);
+            data[pos * 3 + 6] = (byte)(Color.GetColor("_EmissionColor").r * 255);
+            data[pos * 3 + 7] = (byte)(Color.GetColor("_EmissionColor").g * 255);
+            data[pos * 3 + 8] = (byte)(Color.GetColor("_EmissionColor").b * 255);
         }
         serialPort.Write(data, 0, data.Length);
 	}
 
     private void Start() 
     {
-        serialPort = new SerialPort("COM8", 115200, Parity.None, 8, StopBits.One);
+        serialPort = new SerialPort(ConfigManager.config.AdalightPort, 115200, Parity.None, 8, StopBits.One);
         serialPort.Open();
         for (int i = 0; i < Lights.Count; i++)
             Materials.Add(Lights[i].GetComponent<Renderer>().material);

@@ -39,5 +39,8 @@ public class Config
     public bool PostProcess = true;
     public int AntiAliasing = 0;
     public string batFileLocation = "";
-
+    public string AdalightPort = "COM8";
+    public int AdalightOffset = 16;
+    public int AdalightLEDCount = 24;
+    public bool AdalightMirror = true;
 }
